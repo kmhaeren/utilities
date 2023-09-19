@@ -1,0 +1,42 @@
+#!/bin/zsh
+
+
+REGEX_PATTERN="^[0-9].[0-9]+$"
+
+if [ -n "$1" ]; then
+    if [[ $1 =~ $REGEX_PATTERN ]]; then
+        PYTHON_VERSION=$1
+    else
+        echo "Invalid version number"
+        exit 1
+    fi
+else
+    PYTHON_VERSION="3"
+fi
+
+
+echo "\nCreating virtual environment for python $PYTHON_VERSION...\n"
+SUCCESS=$(eval "python${PYTHON_VERSION} -m venv  ~/venvs/${"${$(pwd)//\//_}":(-40)}" 2>&1)
+
+if [ $? -eq 0 ]; then
+    echo "Virtual environment created successfully"
+    exit 0
+else
+    echo "Error creating virtual environment"
+    echo "\t Error message: $SUCCESS\n"
+
+    read "REPLY?Do you want to try and install python$PYTHON_VERSION? [y/n]"
+
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        echo "Installing python$PYTHON_VERSION...\n"
+
+        sudo apt-get install -y software-properties-common
+        sudo add-apt-repository ppa:deadsnakes/ppa
+        sudo apt-get update
+        sudo apt install -y python${PYTHON_VERSION} python${PYTHON_VERSION}-distutils python${PYTHON_VERSION}-venv python${PYTHON_VERSION}-pip
+    else
+        echo "Exiting..."
+        exit 1
+    fi
+fi
+

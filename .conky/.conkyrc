@@ -1,0 +1,66 @@
+conky.config = {
+	update_interval = 1,
+	cpu_avg_samples = 2,
+	net_avg_samples = 2,
+	out_to_console = false,
+	override_utf8_locale = true,
+	double_buffer = true,
+	no_buffers = true,
+	text_buffer_size = 32768,
+	imlib_cache_size = 0,
+	own_window = true,
+
+	own_window_transparent = true,
+	own_window_type = 'desktop',
+	own_window_argb_visual = true,
+	own_window_argb_value = 0,
+	own_window_colour = '#000000',
+	own_window_hints = 'undecorated,below,sticky,skip_taskbar,skip_pager',
+	border_inner_margin = 10,
+	border_outer_margin = 0,
+	xinerama_head = 1,
+	gap_x = 30,
+	gap_y = 50,
+	draw_shades = false,
+	draw_outline = false,
+	draw_borders = false,
+	draw_graph_borders = false,
+	use_xft = true,
+	uppercase = false,
+	default_color = '#FFFFFF',
+	minimum_width = 300,
+	minimum_height = 100,
+	alignment = 'top_left',
+
+	lua_load = '~/.conky/conky_grey.lua',
+	lua_draw_hook_pre = 'background'
+
+};
+conky.text = [[
+	${ font  Tlwg Typewriter: bold: size=15 }WEATHER
+${ font  Tlwg Typewriter: size = 13 }Rise: ${ font  Tlwg Typewriter: size = 13 }${ execpi 300 curl wttr.in ? format = "%S" --silent --max - time 3}  ${ alignc }Set${ font  Tlwg Typewriter: size = 13 } ${ execpi 300 curl wttr.in ? format = "%s" --silent --max - time 3} ${ alignr }Moon: ${ font  GE Inspira: size = 13 }${ execpi 300 curl wttr.in ? format = "%m" --silent --max - time 3}
+	${ font Tlwg Typewriter: bold: size=13 }${ alignc }${ execpi 300 curl wttr.in / Ghent ? T0--silent --max - time 3}
+	${ font  Tlwg Typewriter: bold: size=15 }SYSTEM
+${ font  Tlwg Typewriter: size = 13 }Uptime: $alignr$uptime
+${ font  Tlwg Typewriter: size = 13 }Temperature$alignr ${ execpi 60 cat / sys / class/ thermal / thermal_zone9 / temp | sed 's/\(.\)..$/.\1°C/'}
+Processes: $alignr ${ execi 60 ps aux | wc - l}
+	${ color F6CF57 }${ font FontAwesome: size = 20 } ${ battery_bar 20, 200} ${ color } $alignr${ font  Tlwg Typewriter: size = 14 }${ battery_time }
+${ font  Tlwg Typewriter: bold: size=15 }CPU
+${ font  Tlwg Typewriter: size = 13 }${ cpu cpu1 } % ${ cpubar cpu1 13, 180}$alignr${ font  Tlwg Typewriter: size = 13 }${ cpu cpu2 } % ${ cpubar cpu2 13, 180}
+${ font  Tlwg Typewriter: size = 13 }${ cpu cpu3 } % ${ cpubar cpu3 13, 180}$alignr${ font  Tlwg Typewriter: size = 13 }${ cpu cpu4 } % ${ cpubar cpu4 13, 180}
+${ font  Tlwg Typewriter: bold: size=15 }MEMORY
+${ font  Tlwg Typewriter: size = 13 }RAM$alignr${ memperc } % ${ membar 13, 200}
+${ font  Tlwg Typewriter: size = 13 }SWAP$alignr${ swapperc } % ${ swapbar 13, 200}
+${ font  Tlwg Typewriter: bold: size=15 }DISK USAGE
+${ font  Tlwg Typewriter: size = 13 }${ fs_used /} / ${fs_size /} ${ fs_used_perc /}% ${
+		fs_bar 13, 200/}
+${ font  Tlwg Typewriter: bold: size=15 }PROCESSES
+${ font  Tlwg Typewriter: bold: size=13 }Name $alignr PID   CPU % MEM %
+	${ font  Tlwg Typewriter: size = 13 }${ top_mem name 1} $alignr ${ top_mem pid 1} ${ top_mem cpu 1} % ${ top_mem mem 1} %
+	${ top_mem name 2} $alignr ${ top_mem pid 2} ${ top_mem cpu 2} % ${ top_mem mem 2} %
+	${ top_mem name 3} $alignr ${ top_mem pid 3} ${ top_mem cpu 3} % ${ top_mem mem 3} %
+	${ font  Tlwg Typewriter: bold: size=15 }NETWORK
+${ font  Tlwg Typewriter: size = 13 }${
+		execi 1000  wget - q - O - http://ipecho.net/plain; echo}
+		Connections: ${ tcp_portmon 1 65535 count }
+]];
